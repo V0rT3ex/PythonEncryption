@@ -29,7 +29,21 @@ def generate_keys(n, phi):
 
 
 def main():
-    pass
+    p = int(input("Insert the first prime number:\t"))
+    q = int(input("Insert the second prime number:\t"))
+    n = p * q
+    phi = (p - 1) * (q - 1)
+    e, d = generate_keys(n, phi)
+    message = input("Enter a message to decrypt:\t")
+    cipher = [ord(s) for s in message]
+    cipher = [(c ** e % n) for c in cipher]
+    string_cipher = [chr(c) for c in cipher]
+    string_cipher = ''.join(string_cipher)
+    print("Encrypted data:\t{}".format(string_cipher))
+    cipher = [(c ** d % n) for c in cipher]
+    string_cipher = [chr(c) for c in cipher]
+    string_cipher = ''.join(string_cipher)
+    print("Decrypted data:\t{}".format(string_cipher))
 
 
 if __name__ == '__main__':
