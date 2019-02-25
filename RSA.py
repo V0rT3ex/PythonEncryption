@@ -2,6 +2,23 @@ from math import gcd
 from random import randint
 
 
+def is_prime(n):
+    """
+    This functions receives a number and returns whether
+    the number is prime (True) or not(False). It is executed in O(n^0.5) efficiency.
+    """
+
+    if n == 2 or n == 3:
+        return True
+    elif n < 2 or n % 2 == 0 or n % 3 == 0:
+        return False
+    # Looping until we get to square root of the number passed in as a parameter
+    for i in range(4, int(n ** 0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+
 def generate_keys(n, phi):
     """
     This function receives the modulus(n) and the totient(phi)
