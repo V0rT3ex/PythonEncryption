@@ -16,23 +16,23 @@ def is_prime(n):
         return False
 
     # Looping until i reaches the square root of n
-    for i in range(4, int(n ** 0.5)):
+    for i in range(4, int(n ** 0.5) + 1):
         if n % i == 0:
             return False
     return True
 
 
-def write_list_to_file(l, f):
+def write_list_to_file(l, file):
     """
     This function receives two parameters - l and f.
     l is a list which will be written to the file - f.
     """
 
     for item in l:
-        f.write(str(item) + ",")
+        file.write(str(item) + ",")
 
 
-def generate_primes(a, path=''):
+def generate_prime_file(a, path=''):
     """
     This function creates a list of prime numbers under the upper boundary denoted as a.
     It will also write the list to a file.
@@ -69,6 +69,39 @@ def generate_primes(a, path=''):
                 write_list_to_file(prime_list, primes_file)
             finally:
                 primes_file.close()
+
+
+def generate_primes(path):
+    """
+    This function receives a path of a file.
+    The file will contain prime numbers which will be read into a list.
+    The function returns two different random prime numbers - p and q.
+    If an error occurs, p and q will be -1 in default.
+    """
+
+    p, q = -1, -1
+    try:
+        file = open(path, "rt", encoding='utf-8')
+    except Exception as e:
+        print(e)
+    else:
+        chunk_size = 256
+        prime_list = file.read(chunk_size)
+        while True:
+            content = file.read(chunk_size)
+            if not content:
+                break
+            prime_list += content
+        prime_list = prime_list.split(',')
+        prime_list = prime_list[:-2]
+        while True:
+            q = int(prime_list[randint(0, len(prime_list) - 1)])
+            p = int(prime_list[randint(0, len(prime_list) - 1)])
+            if p != q:
+                break
+    finally:
+        file.close()
+        return p, q
 
 
 def generate_keys(n, phi):
