@@ -52,13 +52,14 @@ class Server:
             except Exception as e:
                 print("An error occurred")
             else:
+                priv_key = self.create_keys()
                 server_socket, client_socket = self.socket_operations()
                 while True:
                     data = client_socket.recv(1024).decode('utf-8')
+                    print(data)
                     if not data:
                         break
                     print("From connected user:\t" + data)
-                    priv_key = self.create_keys()
                     f.write(decrypt(data, priv_key))
                     client_socket.send(data.encode('utf-8'))
             finally:
@@ -86,18 +87,28 @@ class Client:
             my_socket.connect((self.addr, self.host))
             return my_socket
 
+    def recv_public_key(self):
+        my_socket = self.socket_operations()
+        pub_key = my_socket.recv(1024).decode('utf-8')
+        pub_key = pub_key[1:len(pub_key) - 1]
+        pub_key = pub_key.split(',')
+        pub_key = tuple(int(item) for item in pub_key)
+        my_socket.close()
+        return pub_key
+
     def send_textfile(self, path):
         try:
             f = open(path, 'r')
         except FileNotFoundError as e:
             print(e)
         else:
+            pub_key = self.recv_public_key()
             data = ''
             my_socket = self.socket_operations()
             chunk_size = 1024
             f_contents = f.read(chunk_size)
             while len(f_contents) > 0:
-                my_socket.send(f_contents.encode('utf-8'))
+                my_socket.send((encrypt(f_contents, pub_key)).encode('utf-8'))
                 data += my_socket.recv(1024).decode('utf-8')
                 f_contents = f.read(chunk_size)
             print("The server sent:\t" + data)
