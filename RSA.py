@@ -1,3 +1,4 @@
+import os
 from math import gcd
 from random import randint
 
@@ -19,6 +20,55 @@ def is_prime(n):
         if n % i == 0:
             return False
     return True
+
+
+def write_list_to_file(l, f):
+    """
+    This function receives two parameters - l and f.
+    l is a list which will be written to the file - f.
+    """
+
+    for item in l:
+        f.write(str(item) + ",")
+
+
+def generate_primes(a, path=''):
+    """
+    This function creates a list of prime numbers under the upper boundary denoted as a.
+    It will also write the list to a file.
+    If the path parameter is not passed in, it will create a new text file in the working directory.
+    Otherwise, the list will be written to the path passed in.
+    """
+
+    prime_list = [i for i in range(a + 1) if is_prime(i)]
+    if path == '':
+        try:
+            primes_file = open("primes.txt", "wt", encoding='utf-8')
+        except Exception as e:
+            print(e)
+        else:
+            write_list_to_file(prime_list, primes_file)
+        finally:
+            primes_file.close()
+    else:
+        if os.path.exists(path):
+            try:
+                primes_file = open(path, "wt", encoding='utf-8')
+            except Exception as e:
+                print(e)
+            else:
+                write_list_to_file(prime_list, primes_file)
+            finally:
+                primes_file.close()
+        else:
+            try:
+                primes_file = open("primes.txt", "wt", encoding='utf-8')
+            except Exception as e:
+                print(e)
+            else:
+                write_list_to_file(prime_list, primes_file)
+            finally:
+                primes_file.close()
 
 
 def generate_keys(n, phi):
