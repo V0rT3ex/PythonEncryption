@@ -24,8 +24,8 @@ def is_prime(n):
 
 def write_list_to_file(l, file):
     """
-    This function receives two parameters - l and f.
-    l is a list which will be written to the file - f.
+    This function receives two parameters - l and file.
+    l is a list which will be written to the file .
     """
 
     for item in l:
@@ -104,11 +104,20 @@ def generate_primes(path):
         return p, q
 
 
-def generate_keys(n, phi):
+def generate_keys():
     """
-    This function receives the modulus(n) and the totient(phi)
-    and retrieves two keys: private and public key.
+    This function generates the private and public keys.
+    It uses the generate_primes function.
     """
+
+    path = input("Enter the path of the file you are reading from the prime number:\t")
+    p, q = generate_primes(path)
+
+    # Creating the modulus - n
+    n = p * q
+
+    # Creating the totient - phi
+    phi = (p - 1) * (q - 1)
 
     # Creating the public key
     e = randint(2, phi - 1)
@@ -127,25 +136,54 @@ def generate_keys(n, phi):
             break
         k += 1
 
-    return e, d
+    return (e, n), (d, n)
 
 
-def main():
-    p = int(input("Insert the first prime number:\t"))
-    q = int(input("Insert the second prime number:\t"))
-    n = p * q
-    phi = (p - 1) * (q - 1)
-    e, d = generate_keys(n, phi)
-    message = input("Enter a message to decrypt:\t")
-    cipher = [ord(s) for s in message]
+def encrypt(message, pub_key):
+    """
+    This function receives a message to encrypt and a public-key(denoted by pub_key).
+    It returns a string which represents the encrypted message.
+    """
+
+    e, n = pub_key
+    cipher = [ord(c) for c in message]
     cipher = [(c ** e % n) for c in cipher]
     string_cipher = [chr(c) for c in cipher]
     string_cipher = ''.join(string_cipher)
-    print("Encrypted data:\t{}".format(string_cipher))
-    cipher = [(c ** d % n) for c in cipher]
-    string_cipher = [chr(c) for c in cipher]
-    string_cipher = ''.join(string_cipher)
-    print("Decrypted data:\t{}".format(string_cipher))
+    return string_cipher
+
+
+def decrypt(string_cipher, pri_key):
+    """
+    This function receives a message(string_cipher) to decrypt and a private-key(pri_key).
+    It returns a string which represents the original message.
+    """
+
+    d, n = pri_key
+    cipher = [ord(s) for s in string_cipher]
+    cipher = [(s ** d % n) for s in cipher]
+    decrypted_data = [chr(s) for s in cipher]
+    decrypted_data = ''.join(decrypted_data)
+    return decrypted_data
+
+
+def main():
+    pass
+    # p = int(input("Insert the first prime number:\t"))
+    # q = int(input("Insert the second prime number:\t"))
+    # n = p * q
+    # phi = (p - 1) * (q - 1)
+    # e, d = generate_keys(n, phi)
+    # message = input("Enter a message to decrypt:\t")
+    # cipher = [ord(s) for s in message]
+    # cipher = [(c ** e % n) for c in cipher]
+    # string_cipher = [chr(c) for c in cipher]
+    # string_cipher = ''.join(string_cipher)
+    # print("Encrypted data:\t{}".format(string_cipher))
+    # cipher = [(c ** d % n) for c in cipher]
+    # string_cipher = [chr(c) for c in cipher]
+    # string_cipher = ''.join(string_cipher)
+    # print("Decrypted data:\t{}".format(string_cipher))
 
 
 if __name__ == '__main__':
