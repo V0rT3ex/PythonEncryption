@@ -41,7 +41,7 @@ class Server:
         pub_key, priv_key = generate_keys(path)
         server_socket, client_socket = self.socket_operations()
         client_socket.send(str(pub_key).encode('utf-8'))
-        return priv_key
+        return priv_key, pub_key
 
     def recv_textfile(self):
         path = input("Enter a path you would like to create a file in:\t")
@@ -57,8 +57,8 @@ class Server:
                     if not data:
                         break
                     print("From connected user:\t" + data)
-                    f.write(data)
-                    data = data.upper()
+                    priv_key, pub_key = self.create_keys()
+                    f.write(decrypt(data, priv_key))
                     client_socket.send(data.encode('utf-8'))
             finally:
                 f.close()
