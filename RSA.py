@@ -110,7 +110,7 @@ def generate_keys():
     It uses the generate_primes function.
     """
 
-    path = input("Enter the path of the file you are reading from the prime number:\t")
+    path = input("Enter the path of the file you are reading from the prime numbers:\t")
     p, q = generate_primes(path)
 
     # Creating the modulus - n
@@ -168,22 +168,12 @@ def decrypt(string_cipher, pri_key):
 
 
 def main():
-    pass
-    # p = int(input("Insert the first prime number:\t"))
-    # q = int(input("Insert the second prime number:\t"))
-    # n = p * q
-    # phi = (p - 1) * (q - 1)
-    # e, d = generate_keys(n, phi)
-    # message = input("Enter a message to decrypt:\t")
-    # cipher = [ord(s) for s in message]
-    # cipher = [(c ** e % n) for c in cipher]
-    # string_cipher = [chr(c) for c in cipher]
-    # string_cipher = ''.join(string_cipher)
-    # print("Encrypted data:\t{}".format(string_cipher))
-    # cipher = [(c ** d % n) for c in cipher]
-    # string_cipher = [chr(c) for c in cipher]
-    # string_cipher = ''.join(string_cipher)
-    # print("Decrypted data:\t{}".format(string_cipher))
+    generate_prime_file(800)
+    pri_key, pub_key = generate_keys()
+    message = input("Enter a message to decrypt:\t")
+    encrypted_data = encrypt(message, pub_key)
+    print("Encrypted data:\t{}".format(encrypted_data))
+    print("Decrypted data:\t{}".format(decrypt(encrypted_data, pri_key)))
 
 
 if __name__ == '__main__':
